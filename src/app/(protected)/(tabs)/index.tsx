@@ -1,13 +1,19 @@
 import PostListItem from '@/components/PostListItem'
 import { dummyPosts } from '@/dummyData'
-import { FlatList } from 'react-native'
+import { Link } from 'expo-router'
+import { FlatList, Text } from 'react-native'
 
 export default function HomeScreen() {
   return (
-    <FlatList 
+    <FlatList
       data={dummyPosts}
       renderItem={({item}) => <PostListItem post={item} />}
       showsVerticalScrollIndicator={false}
+      ListHeaderComponent={() => (
+        <Link href={'/new'} className='text-red-300'>
+          New Post
+        </Link>
+      )}
     />
   )
 }

@@ -14,11 +14,6 @@ export default function TabsLayout() {
           <Feather name="search" color={color} size={size} />
         ),
       }} />
-      <Tabs.Screen name="post" options={{
-        tabBarIcon: ({ color, size }) => (
-          <Feather name="plus" color={color} size={size} />
-        ),
-      }} />
       <Tabs.Screen name="notifications" options={{
         tabBarIcon: ({ color, size }) => (
           <Feather name="heart" color={color} size={size} />

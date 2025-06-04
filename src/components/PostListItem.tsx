@@ -42,17 +42,17 @@ export default function PostListItem({post}: {post: Post}) {
 
           <View className="flex-row items-center mt-3 gap-4">
             <View className='flex-row items-center gap-1'>
-              <Ionicons name="heart-outline" size={24} color={"#d1d5db"}/>
+              <Ionicons name="heart-outline" size={21} color={"#d1d5db"}/>
               <Text className="text-gray-300">{post.replies.length}</Text>
             </View>
 
             <View className='flex-row items-center gap-1'>
-              <Ionicons name="chatbubble-outline" size={24} color={"#d1d5db"}/>
+              <Ionicons name="chatbubble-outline" size={21} color={"#d1d5db"}/>
               <Text className="text-gray-300">{post.replies.length}</Text>
             </View>
 
-            <Ionicons name="repeat-outline" size={24} color={"#d1d5db"}/>
-            <Ionicons name="paper-plane-outline" size={24} color={"#d1d5db"}/>
+            <Ionicons name="repeat-outline" size={21} color={"#d1d5db"}/>
+            <Ionicons name="paper-plane-outline" size={21} color={"#d1d5db"}/>
 
           </View>
         </View>
