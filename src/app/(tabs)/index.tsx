@@ -1,9 +1,13 @@
-import { View, Text } from 'react-native'
+import PostListItem from '@/components/PostListItem'
+import { dummyPosts } from '@/dummyData'
+import { FlatList } from 'react-native'
 
 export default function HomeScreen() {
   return (
-    <View>
-      <Text>HomeScreen</Text>
-    </View>
+    <FlatList 
+      data={dummyPosts}
+      renderItem={({item}) => <PostListItem post={item} />}
+      showsVerticalScrollIndicator={false}
+    />
   )
 }
