@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import { ActivityIndicator } from 'react-native';
 
 type MyAuthContextType = {
   user: User | null
@@ -30,8 +31,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       async (event, session) => {
         if (session) {
           setUser(session.user);
+          setIsAuthenticated(true)
         } else {
           setUser(null);
+          setIsAuthenticated(false)
         }
         setLoading(false);
       }
@@ -73,6 +76,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setLoading(false);
     }
   };
+
+  if(loading) {
+    return <ActivityIndicator />
+  }
 
   const value = {
     user,

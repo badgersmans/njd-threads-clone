@@ -14,10 +14,6 @@ export default function HomeScreen() {
           <Link href={'/new'} className='text-red-300'>
             New Post
           </Link>
-
-          <Link href={'/login'} className='text-red-300'>
-            Login
-          </Link>
         </>
       )}
     />
