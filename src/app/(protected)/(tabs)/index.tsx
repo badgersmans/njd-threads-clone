@@ -10,9 +10,15 @@ export default function HomeScreen() {
       renderItem={({item}) => <PostListItem post={item} />}
       showsVerticalScrollIndicator={false}
       ListHeaderComponent={() => (
-        <Link href={'/new'} className='text-red-300'>
-          New Post
-        </Link>
+        <>
+          <Link href={'/new'} className='text-red-300'>
+            New Post
+          </Link>
+
+          <Link href={'/login'} className='text-red-300'>
+            Login
+          </Link>
+        </>
       )}
     />
   )
