@@ -1,9 +1,11 @@
-import { View, Text } from 'react-native'
+import { useMyAuth } from '@/context/MyAuthContext'
+import { View, Text, Pressable } from 'react-native'
 
 export default function ProfileScreen() {
+  const {logout} = useMyAuth()
   return (
-    <View>
-      <Text>ProfileScreen</Text>
-    </View>
+    <Pressable onPress={logout}>
+      <Text className='text-white'>Sign Out</Text>
+    </Pressable>
   )
 }
