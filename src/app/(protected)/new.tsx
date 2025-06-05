@@ -26,9 +26,9 @@ export default function PostScreen() {
   const {mutate, data, error, isPending} = useMutation({
     mutationFn: () => createPost(),
     onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
       setText('')
       router.back()
-      queryClient.invalidateQueries({ queryKey: ['posts'] })
     },
     onError: (error) => {
       console.log(error.message)

@@ -13,7 +13,7 @@ export default function HomeScreen() {
     .order('created_at', { ascending: false })
     .throwOnError()
 
-    console.log(JSON.stringify(data, null, 2))
+    // console.log(JSON.stringify(data, null, 2))
     return data;
   }
 
@@ -34,11 +34,6 @@ export default function HomeScreen() {
       data={posts}
       renderItem={({item}) => <PostListItem post={item} />}
       showsVerticalScrollIndicator={false}
-      ListHeaderComponent={() => (
-        <Link href={'/new'} className='text-red-300'>
-          New Post
-        </Link>
-      )}
     />
   )
 }

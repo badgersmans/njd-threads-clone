@@ -1,9 +1,20 @@
-import { Tabs } from 'expo-router'
+import { router, Tabs } from 'expo-router'
 import {Feather, Ionicons} from '@expo/vector-icons';
+import { View } from 'react-native';
 
 export default function TabsLayout() {
   return (
-    <Tabs screenOptions={{tabBarShowLabel: false}}>
+    <Tabs 
+      screenOptions={{
+        tabBarShowLabel: false,
+        // tabBarStyle: {
+        //   backgroundColor: 'red',
+        // paddingTop: 10
+        //   height: 200
+        // }
+      }}
+      
+    >
       <Tabs.Screen name="index" options={{
         title: 'Home',
         tabBarIcon: ({ color, size }) => (
@@ -16,6 +27,22 @@ export default function TabsLayout() {
           <Feather name="search" color={color} size={size} />
         ),
       }} />
+      <Tabs.Screen name="plus" 
+        options={{
+          // title: '',
+          tabBarIcon: ({ color, size }) => (
+            <View className='bg-neutral-700 rounded-md justify-center items-center w-9 h-9'>
+              <Feather name="plus" color={color} size={size} />
+            </View>
+          ),
+        }}
+        listeners={{
+          tabPress: (e) => {
+            e.preventDefault()
+            router.push('/new')
+          }
+        }}
+      />
       <Tabs.Screen name="notifications" options={{
         title: 'Notifications',
         tabBarIcon: ({ color, size }) => (
