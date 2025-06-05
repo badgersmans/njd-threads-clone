@@ -10,9 +10,10 @@ export default function HomeScreen() {
     const {data, error} = await supabase
     .from('posts')
     .select('*, user:profiles(*)')
+    .order('created_at', { ascending: false })
     .throwOnError()
 
-    // console.log(JSON.stringify(data, null, 2))
+    console.log(JSON.stringify(data, null, 2))
     return data;
   }
 

@@ -11,6 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // import { MMKV } from 'react-native-mmkv'
 // export const storage = new MMKV()
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   return (
@@ -19,8 +20,6 @@ export default function RootLayout() {
 }
 
 function AppContent() {
-  const queryClient = new QueryClient();
-
   // Set up the sync hook - automatically disabled in production!
   useSyncQueriesExternal({
     queryClient,
@@ -33,7 +32,7 @@ function AppContent() {
       appVersion: "1.0.0",
       // Add any relevant platform info
     },
-    enableLogs: true,
+    enableLogs: false,
     // envVariables: {
     //   NODE_ENV: process.env.NODE_ENV,
     //   // Add any private environment variables you want to monitor

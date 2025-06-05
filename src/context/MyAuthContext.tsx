@@ -52,7 +52,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (session) {
         setUser(session.user);
         setIsAuthenticated(true)
-        console.log(JSON.stringify(session, null, 2))
+        // console.log(JSON.stringify(session, null, 2))
       }
     } catch (err) {
       setError('Failed to check authentication status');
