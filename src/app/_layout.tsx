@@ -54,12 +54,12 @@ function AppContent() {
   // Your app content
   return (
     <ThemeProvider value={theme}>
-      <AuthProvider>
       <QueryClientProvider client={queryClient}>
-        <StatusBar style="auto" />
-        <Slot />
+        <AuthProvider>
+          <StatusBar style="auto" />
+          <Slot />
+        </AuthProvider>
       </QueryClientProvider>
-      </AuthProvider>
   </ThemeProvider>
   )
 }
