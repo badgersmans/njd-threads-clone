@@ -1,14 +1,18 @@
 import { Text, View, Image, Pressable } from 'react-native'
 import React from 'react'
-import { Post } from '@/types'
 import { Link } from 'expo-router'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { Tables } from '@/types/database.types';
 
 dayjs.extend(relativeTime)
 
-export default function PostListItem({post}: {post: Post}) {
+type PostWithuser = Tables<'posts'> & {
+  user: Tables<'profiles'>
+}
+
+export default function PostListItem({post}: {post: PostWithuser}) {
   return (
     <Link href={`/${post.id}`} asChild>
       <Pressable className="flex-row p-4 border-b border-gray-800/80">
