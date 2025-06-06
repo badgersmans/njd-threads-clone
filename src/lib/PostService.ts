@@ -26,6 +26,17 @@ export const fetchPostById = async (id: string) => {
   return data;
 }
 
+export const fetchPostReplies = async (id: string) => {
+  const {data, error} = await supabase
+  .from('posts')
+  .select('*, user:profiles(*)')
+  .eq('parent_id', id)
+  .throwOnError()
+
+  console.log(JSON.stringify(data, null, 2))
+  return data;
+}
+
 export const createPost = async (newPost: InsertPost) => {
   const {data} = await supabase
   .from('posts')

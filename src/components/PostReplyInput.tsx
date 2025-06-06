@@ -19,7 +19,7 @@ export default function PostReplyInput({post}: PostWithuser ) {
   const {mutate, data, error, isPending} = useMutation({
     mutationFn: () => createPost({content: reply, user_id: user?.id, parent_id: post.id}),
     onSuccess: (data) => {
-      // queryClient.invalidateQueries({ queryKey: ['posts'] })
+      queryClient.invalidateQueries({ queryKey: ['posts', post.id, 'replies'] })
       setReply('')
     },
     onError: (error) => {
