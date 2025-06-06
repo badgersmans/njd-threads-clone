@@ -1,5 +1,5 @@
 import { useMyAuth } from '@/context/MyAuthContext'
-import { supabase } from '@/lib/supabase'
+import { createPost } from '@/lib/postService'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { router } from 'expo-router'
 import { useState } from 'react'
@@ -11,20 +11,8 @@ export default function PostScreen() {
   const [text, setText] = useState('')
   const {user} = useMyAuth()
 
-  const createPost = async () => {
-    if (!text || !user) return;
-
-    const {data} = await supabase
-    .from('posts')
-    .insert({content: text, user_id: user?.id})
-    .throwOnError()
-    .select('*')
-
-    return data
-  }
-
   const {mutate, data, error, isPending} = useMutation({
-    mutationFn: () => createPost(),
+    mutationFn: () => createPost({content: text, user_id: user?.id}),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['posts'] })
       setText('')
@@ -57,8 +45,8 @@ export default function PostScreen() {
         {error && <Text className='text-red-400 text-sm mt-4'>{error.message}</Text>}
 
         <View className='mt-auto'>
-          <Pressable 
-            onPress={() => mutate()} 
+          <Pressable
+            onPress={() => mutate()}
             className={`${isPending ? 'bg-white/50' : 'bg-white'} self-end rounded-full px-4 p-3`}
             disabled={isPending}
           >

@@ -1,5 +1,5 @@
 import PostListItem from '@/components/PostListItem'
-import { fetchPosts } from '@/lib/PostService'
+import { fetchPosts } from '@/lib/postService'
 import { useQuery } from '@tanstack/react-query'
 import { ActivityIndicator, FlatList, Text } from 'react-native'
 

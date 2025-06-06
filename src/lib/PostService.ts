@@ -1,4 +1,7 @@
 import { supabase } from '@/lib/supabase'
+import { TablesInsert } from '@/types/database.types';
+
+type InsertPost = TablesInsert<'posts'>
 
 export const fetchPosts = async () => {
   const {data, error} = await supabase
@@ -23,12 +26,10 @@ export const fetchPostById = async (id: string) => {
   return data;
 }
 
-export const createPost = async (text, userId) => {
-  if (!text || !userId) return;
-
+export const createPost = async (newPost: InsertPost) => {
   const {data} = await supabase
   .from('posts')
-  .insert({content: text, user_id: userId})
+  .insert(newPost)
   .throwOnError()
   .select('*')
 

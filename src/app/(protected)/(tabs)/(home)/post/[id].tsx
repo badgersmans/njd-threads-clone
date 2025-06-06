@@ -1,7 +1,7 @@
-import { View, Text, ActivityIndicator } from 'react-native'
+import { View, Text, ActivityIndicator, ScrollView, FlatList } from 'react-native'
 import { useLocalSearchParams } from 'expo-router/build/hooks'
 import { useQuery } from '@tanstack/react-query'
-import { fetchPostById } from '@/lib/PostService'
+import { fetchPostById } from '@/lib/postService'
 import PostListItem from '@/components/PostListItem'
 import PostReplyInput from '@/components/PostReplyInput'
 
@@ -21,9 +21,15 @@ export default function ThreadDetails() {
 
   return (
     <View className='flex-1'>
-      <PostListItem post={post}/>
+      <FlatList 
+        data={[]}
+        renderItem={({item}) => (
+          <PostListItem post={item}/>
+        )}
+        ListHeaderComponent={() => <PostListItem post={post} />}
+      />
 
-      <PostReplyInput post={post}/>
+      <PostReplyInput post={post} />
     </View>
   )
 }
