@@ -8,11 +8,14 @@ dayjs.extend(relativeTime)
 
 import { Tables } from '@/types/database.types';
 
-type PostWithuser = Tables<'posts'> & {
+type PostWithUser = Tables<'posts'> & {
   user: Tables<'profiles'>
+  replies: {
+    count: number
+  }[]
 }
 
-export default function PostListItem({post}: {post: PostWithuser}) {
+export default function PostListItem({post}: {post: PostWithUser}) {
   return (
     <View className="p-4 border-b border-gray-800/80">
       <Link href={`/post/${post.id}`} asChild>
@@ -31,7 +34,7 @@ export default function PostListItem({post}: {post: PostWithuser}) {
             </View>
 
             <Text className="text-white mt-2 leading-5">{post.content}</Text>
-                      
+
             {/* {post.parent && ( */}
               {/* <View className="mt-2 bg-gray-800/50 p-3 rounded-lg">
                 <View className="flex-row items-center">
@@ -58,7 +61,7 @@ export default function PostListItem({post}: {post: PostWithuser}) {
 
         <TouchableOpacity className='flex-row items-center gap-1'>
           <Ionicons name="chatbubble-outline" size={21} color={"#d1d5db"}/>
-          <Text className="text-gray-300">{0}</Text>
+          <Text className="text-gray-300">{post.replies?.[0].count || 0}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity>

@@ -19,7 +19,7 @@ export default function PostReplyInput({post}: PostWithuser ) {
   const {mutate, data, error, isPending} = useMutation({
     mutationFn: () => createPost({content: reply, user_id: user?.id, parent_id: post.id}),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['posts', post.id, 'replies'] })
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
       setReply('')
     },
     onError: (error) => {
@@ -30,7 +30,7 @@ export default function PostReplyInput({post}: PostWithuser ) {
 
   return (
     <View className='flex-row items-center mt-auto bg-neutral-700 p-2 rounded-xl gap-4 mb-5'>
-      <Image source={{uri: post?.user.avatar_url}} className='w-12 aspect-square rounded-full ml-1 border-white/60 border-2'/>
+      <Image source={{uri: post.user.avatar_url}} className='w-12 aspect-square rounded-full ml-1 border-white/60 border-2'/>
       <TextInput
         placeholder='Add to Thread'
         placeholderTextColor='text-white'
