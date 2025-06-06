@@ -3,6 +3,7 @@ import { useLocalSearchParams } from 'expo-router/build/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { fetchPostById } from '@/lib/PostService'
 import PostListItem from '@/components/PostListItem'
+import PostReplyInput from '@/components/PostReplyInput'
 
 export default function ThreadDetails() {
   const {id} = useLocalSearchParams<{id: string}>()
@@ -19,8 +20,10 @@ export default function ThreadDetails() {
   }
 
   return (
-    <View>
+    <View className='flex-1'>
       <PostListItem post={post}/>
+
+      <PostReplyInput post={post}/>
     </View>
   )
 }

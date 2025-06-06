@@ -19,7 +19,7 @@ export const fetchPostById = async (id: string) => {
   .single()
   .throwOnError()
 
-  console.log(JSON.stringify(data, null, 2))
+  // console.log(JSON.stringify(data, null, 2))
   return data;
 }
 

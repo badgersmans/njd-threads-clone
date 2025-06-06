@@ -1,12 +1,12 @@
 import { Text, View, Image, Pressable, TouchableOpacity } from 'react-native'
-import React from 'react'
 import { Link } from 'expo-router'
 import Ionicons from '@expo/vector-icons/Ionicons';
+
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { Tables } from '@/types/database.types';
-
 dayjs.extend(relativeTime)
+
+import { Tables } from '@/types/database.types';
 
 type PostWithuser = Tables<'posts'> & {
   user: Tables<'profiles'>
@@ -15,7 +15,7 @@ type PostWithuser = Tables<'posts'> & {
 export default function PostListItem({post}: {post: PostWithuser}) {
   return (
     <View className="p-4 border-b border-gray-800/80">
-      <Link href={`/posts/${post.id}`} asChild>
+      <Link href={`/post/${post.id}`} asChild>
         <Pressable className='flex-row'>
           <Image
             source={{ uri: post.user.avatar_url }} 
