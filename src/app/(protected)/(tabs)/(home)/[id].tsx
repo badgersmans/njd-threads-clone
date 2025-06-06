@@ -5,7 +5,7 @@ export default function ThreadDetails() {
   const {id} = useLocalSearchParams()
   return (
     <View>
-      <Text>Thread id: {id}</Text>
+      <Text className='text-white'>Thread id: {id}</Text>
     </View>
   )
 }
