@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { fetchPostById, fetchPostReplies } from '@/lib/postService'
 import PostListItem from '@/components/PostListItem'
 import PostReplyInput from '@/components/PostReplyInput'
+import PostDetails from '@/components/PostDetails'
 
 export default function ThreadDetails() {
   const {id} = useLocalSearchParams<{id: string}>()
@@ -30,7 +31,12 @@ export default function ThreadDetails() {
         renderItem={({item}) => (
           <PostListItem post={item}/>
         )}
-        ListHeaderComponent={() => <PostListItem post={post} />}
+        ListHeaderComponent={
+          <>
+            <PostDetails post={post} />
+            <Text className='text-white text-lg font-bold p-4 border-b border-neutral-700'>Replies</Text>
+          </>
+        }
       />
 
       <PostReplyInput post={post} />
