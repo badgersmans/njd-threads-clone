@@ -15,37 +15,37 @@ type PostWithuser = Tables<'posts'> & {
 export default function PostListItem({post}: {post: PostWithuser}) {
   return (
     <View className="p-4 border-b border-gray-800/80">
-      <Link href={`/${post.id}`} asChild>
+      <Link href={`/posts/${post.id}`} asChild>
         <Pressable className='flex-row'>
           <Image
             source={{ uri: post.user.avatar_url }} 
             className="w-12 aspect-square rounded-full"
           />
-      
-        <View className="flex-1 ml-3">
-          <View className="flex-row items-center">
-            <Text className="text-white font-bold">{post.user.username}</Text>
-            <Text className="text-gray-500 ml-2">
-              {dayjs(post.created_at).fromNow()}
-            </Text>
+
+          <View className="flex-1 ml-3">
+            <View className="flex-row items-center">
+              <Text className="text-white font-bold">{post.user.username}</Text>
+              <Text className="text-gray-500 ml-2">
+                {dayjs(post.created_at).fromNow()}
+              </Text>
+            </View>
+
+            <Text className="text-white mt-2 leading-5">{post.content}</Text>
+                      
+            {/* {post.parent && ( */}
+              {/* <View className="mt-2 bg-gray-800/50 p-3 rounded-lg">
+                <View className="flex-row items-center">
+                  <Text className="text-gray-300">{post.user.username}</Text>
+                  <Text className="text-gray-300 ml-2">·</Text>
+                  <Text className="text-gray-300 ml-2">
+                    {new Date(post.createdAt).toLocaleDateString()}
+                  </Text>
+                </View>
+                <Text className="text-gray-300 mt-1">{post.content}</Text>
+              </View> */}
+            {/* )} */}
           </View>
 
-          <Text className="text-white mt-2 leading-5">{post.content}</Text>
-                    
-          {/* {post.parent && ( */}
-            {/* <View className="mt-2 bg-gray-800/50 p-3 rounded-lg">
-              <View className="flex-row items-center">
-                <Text className="text-gray-300">{post.user.username}</Text>
-                <Text className="text-gray-300 ml-2">·</Text>
-                <Text className="text-gray-300 ml-2">
-                  {new Date(post.createdAt).toLocaleDateString()}
-                </Text>
-              </View>
-              <Text className="text-gray-300 mt-1">{post.content}</Text>
-            </View> */}
-          {/* )} */}
-        </View>
-        
         </Pressable>
       </Link>
 
