@@ -1,6 +1,5 @@
 import PostListItem from '@/components/PostListItem'
 import { supabase } from '@/lib/supabase'
-import { Post } from '@/types'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'expo-router'
 import { ActivityIndicator, FlatList, Text } from 'react-native'
