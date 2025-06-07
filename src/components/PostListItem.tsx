@@ -1,5 +1,5 @@
 import { Text, View, Image, Pressable, TouchableOpacity } from 'react-native'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import dayjs from 'dayjs';
@@ -15,64 +15,56 @@ type PostWithUser = Tables<'posts'> & {
   }[]
 }
 
-export default function PostListItem({post}: {post: PostWithUser}) {
+export default function PostListItem({post, isLastInGroup = true}: {post: PostWithUser, isLastInGroup: boolean}) {
+  const router = useRouter()
   return (
-    <View className="p-4 border-b border-gray-800/80">
-      <Link href={`/post/${post.id}`} asChild>
-        <Pressable className='flex-row'>
+    <View className={`p-4 ${isLastInGroup ? `border-b border-gray-800/80` : ``} `} >
+      <Pressable 
+        className='gap-5 flex-row' 
+        onPress={() => router.push(`/post/${post.id}`)}
+      >
+        {/* Avatar + Vertical Line */}
+        <View className='items-center'>
           <Image
             source={{ uri: post.user.avatar_url }} 
             className="w-12 aspect-square rounded-full"
           />
+          {!isLastInGroup && <View className='absolute top-14 w-[3px] rounded-full h-20 bg-neutral-700' />}
+        </View>
 
-          <View className="flex-1 ml-3">
-            <View className="flex-row items-center">
-              <Text className="text-white font-bold">{post.user.username}</Text>
-              <Text className="text-gray-500 ml-2">
-                {dayjs(post.created_at).fromNow()}
-              </Text>
-            </View>
-
-            <Text className="text-white mt-2 leading-5">{post.content}</Text>
-
-            {/* {post.parent && ( */}
-              {/* <View className="mt-2 bg-gray-800/50 p-3 rounded-lg">
-                <View className="flex-row items-center">
-                  <Text className="text-gray-300">{post.user.username}</Text>
-                  <Text className="text-gray-300 ml-2">·</Text>
-                  <Text className="text-gray-300 ml-2">
-                    {new Date(post.createdAt).toLocaleDateString()}
-                  </Text>
-                </View>
-                <Text className="text-gray-300 mt-1">{post.content}</Text>
-              </View> */}
-            {/* )} */}
+        {/* Post Body */}
+        <View className='gap-4'>
+          <View className='flex-row gap-2'>
+            <Text className="text-white font-bold">{post.user.username}</Text>
+            <Text className="text-gray-500">
+              {dayjs(post.created_at).fromNow()}
+            </Text>
           </View>
 
-        </Pressable>
-      </Link>
+          <Text className="text-white leading-5">{post.content}</Text>
+        </View>
+      </Pressable>
 
       {/* Footer */}
-      <View className="flex-row items-center mt-3 gap-4 ml-16">
+      <View className="flex-row mt-3 gap-4 ml-16">
         <TouchableOpacity className='flex-row items-center gap-1'>
-          <Ionicons name="heart-outline" size={21} color={"#d1d5db"}/>
-          <Text className="text-gray-300">{0}</Text>
+        <Ionicons name="heart-outline" size={21} color={"#d1d5db"}/>
+        <Text className="text-gray-300">{0}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity className='flex-row items-center gap-1'>
-          <Ionicons name="chatbubble-outline" size={21} color={"#d1d5db"}/>
-          <Text className="text-gray-300">{post.replies?.[0].count || 0}</Text>
+        <Ionicons name="chatbubble-outline" size={21} color={"#d1d5db"}/>
+        <Text className="text-gray-300">{post.replies?.[0].count || 0}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity>
-          <Ionicons name="repeat-outline" size={21} color={"#d1d5db"}/>
+        <Ionicons name="repeat-outline" size={21} color={"#d1d5db"}/>
         </TouchableOpacity>
 
         <TouchableOpacity>
-          <Ionicons name="paper-plane-outline" size={21} color={"#d1d5db"}/>
+        <Ionicons name="paper-plane-outline" size={21} color={"#d1d5db"}/>
         </TouchableOpacity>
       </View>
-
     </View>
   )
 }

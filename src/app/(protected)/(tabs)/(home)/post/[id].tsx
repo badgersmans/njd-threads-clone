@@ -8,6 +8,7 @@ import PostDetails from '@/components/PostDetails'
 
 export default function ThreadDetails() {
   const {id} = useLocalSearchParams<{id: string}>()
+  // console.log(`post id`, id)
   const {data: post, error, isLoading} = useQuery({
     queryKey: ['posts', id],
     queryFn: () => fetchPostById(id)
@@ -16,6 +17,14 @@ export default function ThreadDetails() {
     queryKey: ['posts', id, 'replies'],
     queryFn: () => fetchPostReplies(id)
   })
+  const {data: parent,} = useQuery({
+    queryKey: ['posts', post?.parent_id],
+    queryFn: () => fetchPostById(post?.parent_id),
+    enabled: !!post?.parent_id
+  })
+
+  // console.log(`post PARETN id`, post?.parent_id)
+
 
   if(isLoading) {
     return <ActivityIndicator />
@@ -29,10 +38,11 @@ export default function ThreadDetails() {
       <FlatList 
         data={replies || []}
         renderItem={({item}) => (
-          <PostListItem post={item}/>
+          <PostListItem post={item} isLastInGroup={false} />
         )}
         ListHeaderComponent={
           <>
+            {parent && <PostListItem  post={parent} isLastInGroup={false} /> }
             <PostDetails post={post} />
             <Text className='text-white text-lg font-bold p-4 border-b border-neutral-700'>Replies</Text>
           </>
