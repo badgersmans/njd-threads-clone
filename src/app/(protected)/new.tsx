@@ -7,6 +7,10 @@ import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, Touch
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {MaterialIcons} from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { decode } from 'base64-arraybuffer'
+import { supabase } from '@/lib/supabase'
+import 'react-native-get-random-values'
+import { nanoid } from 'nanoid'
 
 export default function PostScreen() {
   const queryClient = useQueryClient()
@@ -34,13 +38,38 @@ export default function PostScreen() {
       mediaTypes: ['images'],
       allowsEditing: true,
       quality: 1,
+      base64: true
     });
 
-    console.log(result);
+    // console.log(result);
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
+
+    const asset = result.assets[0];
+    const base64Image = asset.base64; // ✅ the raw base64 string
+    const base64Str = base64Image
+    const arrayBuffer = decode(base64Str); // ✅ Convert base64 → binary
+
+    const fileName = `${nanoid()}.jpg`; // or .png depending on what you pick
+    const contentType = 'image/jpeg'; // or 'image/png'
+
+    const { data, error } = await supabase
+      .storage
+      .from('media')
+      .upload(`${fileName}`, arrayBuffer, {
+        contentType,
+        upsert: false,
+      });
+
+    if (error) {
+      console.error('Upload failed:', error);
+    } else {
+      console.log('Upload success:', data);
+    }
+
+
   }
 
   return (
