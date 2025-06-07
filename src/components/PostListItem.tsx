@@ -1,12 +1,14 @@
 import { Text, View, Image, Pressable, TouchableOpacity } from 'react-native'
-import { Link, useRouter } from 'expo-router'
+import { useRouter } from 'expo-router'
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { Image as ExpoImage } from 'expo-image';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 
 import { Tables } from '@/types/database.types';
+import { supabase } from '@/lib/supabase';
 
 type PostWithUser = Tables<'posts'> & {
   user: Tables<'profiles'>
@@ -17,6 +19,9 @@ type PostWithUser = Tables<'posts'> & {
 
 export default function PostListItem({post, isLastInGroup = true}: {post: PostWithUser, isLastInGroup: boolean}) {
   const router = useRouter()
+  const blurhash =
+  '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
+
   return (
     <View className={`p-4 ${isLastInGroup ? `border-b border-gray-800/80` : ``} `} >
       <Pressable 
@@ -42,6 +47,21 @@ export default function PostListItem({post, isLastInGroup = true}: {post: PostWi
           </View>
 
           <Text className="text-white leading-5">{post.content}</Text>
+
+          {post.images && post.images.map((image) => (
+            <ExpoImage
+              style={{width: '100%', aspectRatio: 1, borderRadius: 20}}
+              source={{
+                uri: 
+                supabase.storage
+                .from('media')
+                .getPublicUrl(image).data.publicUrl
+            }}
+              placeholder={{ blurhash }}
+              contentFit="cover"
+              transition={1000}
+          />
+          ))}
         </View>
       </Pressable>
 

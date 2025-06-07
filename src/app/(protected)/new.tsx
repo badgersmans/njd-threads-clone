@@ -20,10 +20,16 @@ export default function PostScreen() {
 
   const {mutate, data, error, isPending} = useMutation({
     mutationFn: async () => {
+      let imagePath = null
       if(image) {
-        await uploadImage()
+        imagePath = await uploadImage()
       }
-      return createPost({content: text, user_id: user?.id})
+
+      return createPost({
+        content: text, 
+        user_id: user?.id, 
+        images: [imagePath]
+      })
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['posts'] })
@@ -53,6 +59,9 @@ export default function PostScreen() {
     if (uploadError) {
       throw uploadError
     }
+    console.log(JSON.stringify(data, null, 2))
+
+    return data.path
   }
 
   const handleSelectMedia = async () => {
@@ -63,7 +72,7 @@ export default function PostScreen() {
       quality: 1,
     });
 
-    console.log(JSON.stringify(result, null, 2))
+    // console.log(JSON.stringify(result, null, 2))
 
     if (!result.canceled) {
       setImage(result.assets[0]);
