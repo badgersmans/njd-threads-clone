@@ -1,11 +1,36 @@
+import PostListItem from '@/components/PostListItem'
+import ProfileHeader from '@/components/ProfileHeader'
 import { useMyAuth } from '@/context/MyAuthContext'
-import { View, Text, Pressable } from 'react-native'
+import { fetchPostsByUserId } from '@/lib/postService'
+import { useQuery } from '@tanstack/react-query'
+import { View, Text, ActivityIndicator, FlatList } from 'react-native'
 
 export default function ProfileScreen() {
-  const {logout} = useMyAuth()
+  const {user} = useMyAuth()
+
+  const {data, isLoading, error} = useQuery({
+    queryKey: ['posts', {user_id: user?.id}],
+    queryFn: () => fetchPostsByUserId(user?.id)
+  })
+
+  if(isLoading) {
+    return <ActivityIndicator />
+  }
+  if(error) {
+    return <Text>Error: {error.message}</Text>
+  }
+
   return (
-    <Pressable onPress={logout}>
-      <Text className='text-white'>Sign Out</Text>
-    </Pressable>
+    <View>
+      <FlatList
+        data={data}
+        renderItem={({item}) => (
+          <PostListItem post={item}/>
+        )}
+        ListHeaderComponent={() => (
+          <ProfileHeader />
+        )}
+      />
+    </View>
   )
 }

@@ -28,7 +28,7 @@ export default function PostScreen() {
       return createPost({
         content: text, 
         user_id: user?.id, 
-        images: [imagePath]
+        ...(imagePath && { images: [imagePath] })
       })
     },
     onSuccess: (data) => {

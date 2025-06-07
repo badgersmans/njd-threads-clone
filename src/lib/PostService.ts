@@ -23,7 +23,19 @@ export const fetchPostById = async (id: string) => {
   .single()
   .throwOnError()
 
-  console.log(JSON.stringify(data, null, 2))
+  // console.log(JSON.stringify(data, null, 2))
+  return data;
+}
+
+export const fetchPostsByUserId = async (id: string) => {
+  const {data, error} = await supabase
+  .from('posts')
+  .select('*, user:profiles(*), replies:posts(count)')
+  .eq('user_id', id)
+  .order('created_at', { ascending: false })
+  .throwOnError()
+
+  // console.log(JSON.stringify(data, null, 2))
   return data;
 }
 
@@ -45,5 +57,6 @@ export const createPost = async (newPost: InsertPost) => {
   .throwOnError()
   .select('*')
 
+  // console.log(JSON.stringify(data, null, 2))
   return data
 }
