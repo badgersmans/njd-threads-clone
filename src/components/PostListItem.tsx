@@ -19,8 +19,7 @@ type PostWithUser = Tables<'posts'> & {
 
 export default function PostListItem({post, isLastInGroup = true}: {post: PostWithUser, isLastInGroup: boolean}) {
   const router = useRouter()
-  const blurhash =
-  '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
+  const blurhash = '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
   return (
     <View className={`p-4 ${isLastInGroup ? `border-b border-gray-800/80` : ``} `} >
@@ -48,8 +47,10 @@ export default function PostListItem({post, isLastInGroup = true}: {post: PostWi
 
           <Text className="text-white leading-5">{post.content}</Text>
 
+          {/* Post Images */}
           {post.images && post.images.map((image) => (
             <ExpoImage
+              key={image}
               style={{width: '100%', aspectRatio: 1, borderRadius: 20}}
               source={{
                 uri: 
@@ -62,6 +63,7 @@ export default function PostListItem({post, isLastInGroup = true}: {post: PostWi
               transition={1000}
           />
           ))}
+
         </View>
       </Pressable>
 
