@@ -33,7 +33,7 @@ export default function PostListItem({post, isLastInGroup = true}: {post: PostWi
         </View>
 
         {/* Post Body */}
-        <View className='gap-4'>
+        <View className='gap-4 flex-1'>
           <View className='flex-row gap-2'>
             <Text className="text-white font-bold">{post.user.username}</Text>
             <Text className="text-gray-500">
