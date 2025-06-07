@@ -7,7 +7,6 @@ import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, Touch
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {MaterialIcons} from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { decode } from 'base64-arraybuffer'
 import { supabase } from '@/lib/supabase'
 import 'react-native-get-random-values'
 import { nanoid } from 'nanoid'
@@ -15,12 +14,17 @@ import { nanoid } from 'nanoid'
 export default function PostScreen() {
   const queryClient = useQueryClient()
   const [text, setText] = useState('')
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<ImagePicker.ImagePickerAsset[] | null>(null);
 
   const {user} = useMyAuth()
 
   const {mutate, data, error, isPending} = useMutation({
-    mutationFn: () => createPost({content: text, user_id: user?.id}),
+    mutationFn: async () => {
+      if(image) {
+        await uploadImage()
+      }
+      return createPost({content: text, user_id: user?.id})
+    },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['posts'] })
       setText('')
@@ -32,44 +36,39 @@ export default function PostScreen() {
     },
   })
 
+  const uploadImage = async () => {
+    if (!image) {
+      throw new Error('No image uri!') // Realistically, this should never happen, but just in case...
+    }
+    const arrayBuffer = await fetch(image.uri).then((res) => res.arrayBuffer())
+
+    const fileExt = image.uri?.split('.').pop()?.toLowerCase() ?? 'jpeg'
+    const path = `${nanoid()}.${fileExt}`
+    const { data, error: uploadError } = await supabase.storage
+      .from('media')
+      .upload(path, arrayBuffer, {
+        contentType: image.mimeType ?? 'image/jpeg',
+    })
+
+    if (uploadError) {
+      throw uploadError
+    }
+  }
+
   const handleSelectMedia = async () => {
      // No permissions request is necessary for launching the image library
      let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsEditing: true,
       quality: 1,
-      base64: true
     });
 
-    // console.log(result);
+    console.log(JSON.stringify(result, null, 2))
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImage(result.assets[0]);
+      // uploadImage()
     }
-
-    const asset = result.assets[0];
-    const base64Image = asset.base64; // ✅ the raw base64 string
-    const base64Str = base64Image
-    const arrayBuffer = decode(base64Str); // ✅ Convert base64 → binary
-
-    const fileName = `${nanoid()}.jpg`; // or .png depending on what you pick
-    const contentType = 'image/jpeg'; // or 'image/png'
-
-    const { data, error } = await supabase
-      .storage
-      .from('media')
-      .upload(`${fileName}`, arrayBuffer, {
-        contentType,
-        upsert: false,
-      });
-
-    if (error) {
-      console.error('Upload failed:', error);
-    } else {
-      console.log('Upload success:', data);
-    }
-
-
   }
 
   return (
@@ -90,7 +89,11 @@ export default function PostScreen() {
         />
 
         {image && (
-          <Image source={{uri: image}} className="w-1/2 aspect-square rounded-lg mt-4" />
+          <Image 
+            source={{uri: image.uri}} 
+            className="w-1/2 rounded-lg mt-4"
+            style={{aspectRatio: image.width / image.height}}
+          />
         )}
 
         {/* Buttons */}
