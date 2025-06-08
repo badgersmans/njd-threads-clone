@@ -10,13 +10,14 @@ import * as ImagePicker from 'expo-image-picker';
 import { supabase } from '@/lib/supabase'
 import 'react-native-get-random-values'
 import { nanoid } from 'nanoid'
+import SupabaseImage from '@/components/SupabaseImage'
 
 export default function PostScreen() {
   const queryClient = useQueryClient()
   const [text, setText] = useState('')
   const [image, setImage] = useState<ImagePicker.ImagePickerAsset[] | null>(null);
 
-  const {user} = useMyAuth()
+  const {user, profile} = useMyAuth()
 
   const {mutate, data, error, isPending} = useMutation({
     mutationFn: async () => {
@@ -87,29 +88,38 @@ export default function PostScreen() {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 140 : 0}
     >
       <SafeAreaView className='p-4 flex-1'>
-        <Text className='text-green-200'>username...</Text>
-        <TextInput
-          value={text}
-          onChangeText={setText}
-          placeholder="What's on your mind?"
-          multiline
-          className='text-white text-lg'
-          placeholderTextColor={'gray'}
-        />
-
-        {image && (
-          <Image 
-            source={{uri: image.uri}} 
-            className="w-1/2 rounded-lg mt-4"
-            style={{aspectRatio: image.width / image.height}}
+        <View className='flex-row gap-4'>
+          <SupabaseImage 
+            path={profile.avatar_url}
+            styles={{width: 48}}
           />
-        )}
+          <View className='flex-1 gap-3'>
+            <Text className='text-neutral-200'>@{profile.username}</Text>
+            <TextInput
+              value={text}
+              onChangeText={setText}
+              placeholder="Where is your mind?"
+              multiline
+              style={{fontSize: 15}}
+              className='text-white'
+              placeholderTextColor={'gray'}
+            />
 
-        {/* Buttons */}
-        <View className='flex-row mt-5'>
-          <TouchableOpacity onPress={handleSelectMedia}>
-            <MaterialIcons name="photo" size={24} color="gainsboro" />
-          </TouchableOpacity>
+            {image && (
+              <Image 
+                source={{uri: image.uri}} 
+                className="w-1/2 rounded-lg mt-4"
+                style={{aspectRatio: image.width / image.height}}
+              />
+            )}
+
+            {/* Buttons */}
+            <View className='flex-row'>
+              <TouchableOpacity onPress={handleSelectMedia}>
+                <MaterialIcons name="photo" size={24} color="gainsboro" />
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
 
         {error && <Text className='text-red-400 text-sm mt-4'>{error.message}</Text>}

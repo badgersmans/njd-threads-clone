@@ -2,9 +2,13 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { ActivityIndicator } from 'react-native';
+import { useQuery } from '@tanstack/react-query';
+import { fetchProfileById } from '@/lib/profileService';
+import { Tables } from '@/types/database.types';
 
 type MyAuthContextType = {
-  user: User | null
+  user: User | null,
+  profile: Tables<'profiles'>,
   isAuthenticated: boolean,
   logout: () => void
 }
@@ -20,6 +24,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | false>(false);
+
+  const {data: profile, isLoading, error: profileError} = useQuery({
+    queryKey: ['profile', user?.id],
+    queryFn: () => fetchProfileById(user?.id),
+    staleTime: 2 * 60 * 1000
+  })
 
   // Check if user is logged in on mount and set up auth state listener
   useEffect(() => {
@@ -83,8 +93,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const value = {
     user,
+    profile,
     isAuthenticated,
-    logout
+    logout,
   };
 
   return <MyAuthContext.Provider value={value}>{children}</MyAuthContext.Provider>;

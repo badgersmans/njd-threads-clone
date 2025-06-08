@@ -1,15 +1,13 @@
 import { useMyAuth } from '@/context/MyAuthContext'
-import { View, Text, Pressable, ActivityIndicator, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native'
 import { fetchProfileById } from '@/lib/profileService'
 import { useQuery } from '@tanstack/react-query'
-import { Image as ExpoImage } from 'expo-image';
 import { useRouter } from 'expo-router';
 import SupabaseImage from './SupabaseImage';
 
 export default function ProfileHeader() {
   const {user} = useMyAuth()
   const router = useRouter()
-  const blurhash = '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
   const {data: profile, isLoading, error} = useQuery({
     queryKey: ['profile', user?.id],
