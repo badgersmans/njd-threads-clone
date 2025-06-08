@@ -1,5 +1,4 @@
-import { Text, Image, ActivityIndicator, StyleSheet, ImageStyle } from 'react-native'
-import React from 'react'
+import { Text, Image, StyleSheet, ImageStyle } from 'react-native'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { Image as ExpoImage } from 'expo-image';
@@ -11,7 +10,13 @@ type SupabaseImageProps = {
 }
 
 const downloadImage = async (bucket: string, path: string) => {
-  const { data, error } = await supabase.storage.from(bucket).download(path)
+  const { data, error } = await supabase.storage
+  .from(bucket)
+  .download(path, {
+    transform: {
+      quality: 40,
+    },
+  })
   if (error) {
     throw error
   }
@@ -32,13 +37,14 @@ export default function SupabaseImage({bucket = 'avatars', path, styles}: Supaba
   const blurhash = '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
   
   const {data, error, isLoading} = useQuery({
-    queryKey: ['supabaseImage', path],
-    queryFn: () => downloadImage(bucket, path)
+    queryKey: ['supabaseImage', {bucket, path}],
+    queryFn: () => downloadImage(bucket, path),
+    staleTime: 1000 * 60 * 60 * 24, // a day
   })
 
-  if(isLoading) {
-    return <ActivityIndicator />
-  }
+  // if(isLoading) {
+  //   return <View style={imageStyles.image}/>
+  // }
   if(error) {
     return <Text className='text-red-300'>Error: {error.message}</Text>
   }
@@ -56,10 +62,10 @@ export default function SupabaseImage({bucket = 'avatars', path, styles}: Supaba
    <ExpoImage
     key={data}
     style={[imageStyles.image, styles]}
-    source={{uri: data}}
+    source={{uri: data || undefined}}
     placeholder={{ blurhash }}
     contentFit="cover"
-    transition={1000}
+    {...(!data && { transition: 200 })}
   />
   )
 }
