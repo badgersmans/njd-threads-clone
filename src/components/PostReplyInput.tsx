@@ -1,10 +1,11 @@
 import { View, TouchableOpacity, Image, TextInput } from 'react-native'
 import {MaterialIcons, MaterialCommunityIcons, AntDesign} from '@expo/vector-icons';
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createPost } from '@/lib/postService';
 import { Tables } from '@/types/database.types';
 import { useMyAuth } from '@/context/MyAuthContext';
+import { fetchProfileById } from '@/lib/profileService';
 
 type PostWithuser = Tables<'posts'> & {
   post: Tables<'posts'>
@@ -15,6 +16,11 @@ export default function PostReplyInput({post}: PostWithuser ) {
   const [reply, setReply] = useState('')
   const {user} = useMyAuth()
   const queryClient = useQueryClient()
+
+  const {data: profile, isLoading, isSuccess, error: profileError} = useQuery({
+    queryKey: ['profile', user?.id],
+    queryFn: () => fetchProfileById(user?.id),
+  })
 
   const {mutate, data, error, isPending} = useMutation({
     mutationFn: () => createPost({content: reply, user_id: user?.id, parent_id: post.id}),
@@ -30,7 +36,7 @@ export default function PostReplyInput({post}: PostWithuser ) {
 
   return (
     <View className='flex-row items-center mt-auto bg-neutral-700 p-2 rounded-xl gap-4 mb-5'>
-      <Image source={{uri: post.user.avatar_url}} className='w-12 aspect-square rounded-full ml-1 border-white/60 border-2'/>
+      <Image source={{uri: profile?.avatar_url}} className='w-12 aspect-square rounded-full ml-1 border-white/60 border-2'/>
       <TextInput
         placeholder='Add to Thread'
         placeholderTextColor='text-white'

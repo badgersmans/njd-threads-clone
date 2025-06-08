@@ -3,14 +3,17 @@ import { View, Text, Pressable, ActivityIndicator, FlatList, StyleSheet, Touchab
 import { fetchProfileById } from '@/lib/profileService'
 import { useQuery } from '@tanstack/react-query'
 import { Image as ExpoImage } from 'expo-image';
+import { useRouter } from 'expo-router';
 
 export default function ProfileHeader() {
-  const {user, logout} = useMyAuth()
+  const {user} = useMyAuth()
+  const router = useRouter()
   const blurhash = '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
   const {data: profile, isLoading, error} = useQuery({
-    queryKey: ['user', user?.id],
-    queryFn: () => fetchProfileById(user?.id)
+    queryKey: ['profile', user?.id],
+    queryFn: () => fetchProfileById(user?.id),
+    staleTime: 2 * 60 * 1000
   })
 
   if(isLoading) {
@@ -44,19 +47,20 @@ export default function ProfileHeader() {
       <Text className='text-lg text-neutral-200 leading-snug'>{profile?.bio}</Text>
 
       <View className='flex-row gap-10'>
-        <TouchableOpacity className='bg-neutral-900 flex-1 py-3 rounded-lg items-center border-neutral-700 border'>
+        <TouchableOpacity
+          className='bg-neutral-900 flex-1 py-3 rounded-lg items-center border-neutral-700 border'
+          onPress={() => router.push('/editProfile')}
+        >
           <Text className='text-neutral-300'>Edit Profile</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className='bg-neutral-900 flex-1 py-3 rounded-lg items-center border-neutral-700 border'>
+        <TouchableOpacity
+          className='bg-neutral-900 flex-1 py-3 rounded-lg items-center border-neutral-700 border'
+          onPress={() => router.push('/shareProfile')}
+        >
           <Text className='text-neutral-300'>Share Profile</Text>
         </TouchableOpacity>           
       </View>
-
-
-      {/* <Pressable onPress={logout}>
-        <Text className='text-white'>Sign Out</Text>
-      </Pressable> */}
     </View>
     <Text className='text-white p-2'>Threads</Text>
     </>
