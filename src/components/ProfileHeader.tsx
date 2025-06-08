@@ -4,6 +4,7 @@ import { fetchProfileById } from '@/lib/profileService'
 import { useQuery } from '@tanstack/react-query'
 import { Image as ExpoImage } from 'expo-image';
 import { useRouter } from 'expo-router';
+import SupabaseImage from './SupabaseImage';
 
 export default function ProfileHeader() {
   const {user} = useMyAuth()
@@ -27,20 +28,15 @@ export default function ProfileHeader() {
     <>
     <View className='gap-4 p-2'>
 
-      <View className='flex-row gap-4 items-center '>
+      <View className='flex-row gap-4 items-center justify-between'>
         
         <View className='gap-2'>
           <Text className='font-bold text-3xl text-neutral-200'>{profile?.full_name}</Text>
           <Text className='font-medium text-lg text-neutral-200'>@{profile?.username}</Text>
         </View>
 
-        <ExpoImage
-          key={profile?.id}
-          style={styles.image}
-          source={{uri: profile?.avatar_url }}
-          placeholder={{ blurhash }}
-          contentFit="cover"
-          transition={1000}
+        <SupabaseImage 
+          path={profile?.avatar_url}
         />
       </View>
 

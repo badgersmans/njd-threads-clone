@@ -1,4 +1,4 @@
-import { Text, View, Image, Pressable, TouchableOpacity } from 'react-native'
+import { Text, View, Pressable, TouchableOpacity } from 'react-native'
 import { useRouter } from 'expo-router'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Image as ExpoImage } from 'expo-image';
@@ -9,6 +9,7 @@ dayjs.extend(relativeTime)
 
 import { Tables } from '@/types/database.types';
 import { supabase } from '@/lib/supabase';
+import SupabaseImage from './SupabaseImage';
 
 type PostWithUser = Tables<'posts'> & {
   user: Tables<'profiles'>
@@ -29,10 +30,12 @@ export default function PostListItem({post, isLastInGroup = true}: {post: PostWi
       >
         {/* Avatar + Vertical Line */}
         <View className='items-center'>
-          <Image
-            source={{ uri: post.user.avatar_url }} 
-            className="w-12 aspect-square rounded-full"
+
+          <SupabaseImage 
+            path={post.user.avatar_url} 
+            styles={{width: 48, aspectRatio: 1, borderRadius: 2000}}
           />
+
           {!isLastInGroup && <View className='absolute top-14 w-[3px] rounded-full h-20 bg-neutral-700' />}
         </View>
 

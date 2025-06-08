@@ -1,3 +1,4 @@
+import UserAvatarPicker from '@/components/UserAvatarPicker'
 import { useMyAuth } from '@/context/MyAuthContext'
 import { fetchProfileById, updateUserProfile } from '@/lib/profileService'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -6,10 +7,12 @@ import { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native'
 
 export default function ProfileEdit() {
-  const {user, logout} = useMyAuth()
   const [fullName, setFullName] = useState('')
-  const queryClient = useQueryClient()
   const [bio, setBio] = useState('')
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
+
+  const {user, logout} = useMyAuth()
+  const queryClient = useQueryClient()
 
   const {data: profile, isLoading, isSuccess, error} = useQuery({
     queryKey: ['profile', user?.id],
@@ -20,7 +23,8 @@ export default function ProfileEdit() {
     mutationFn: () => updateUserProfile({
       id: user?.id,
       full_name: fullName,
-      bio
+      bio,
+      avatar_url: avatarUrl
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['profile', user?.id]})
@@ -42,6 +46,7 @@ export default function ProfileEdit() {
     if(isSuccess) {
       setFullName(profile.full_name)
       setBio(profile.bio)
+      setAvatarUrl(profile.avatar_url)
     }
   }, [profile?.id])
 
@@ -49,6 +54,7 @@ export default function ProfileEdit() {
     <View className='flex-1 p-3 gap-4'>
 
       <Text className='text-white text-2xl font-bold'>Edit Profile</Text>
+      <UserAvatarPicker currentAvatar={avatarUrl} onUpload={setAvatarUrl}/>
       <TextInput 
         placeholder='Full name'
         value={fullName}

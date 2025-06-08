@@ -1,14 +1,13 @@
-import { Text, View, Image, Pressable, TouchableOpacity } from 'react-native'
+import { Text, View, Pressable, TouchableOpacity } from 'react-native'
 import { Link } from 'expo-router'
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Image as ExpoImage } from 'expo-image';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 
 import { Tables } from '@/types/database.types';
-import { supabase } from '@/lib/supabase';
+import SupabaseImage from './SupabaseImage';
 
 type PostWithUser = Tables<'posts'> & {
   user: Tables<'profiles'>
@@ -18,16 +17,15 @@ type PostWithUser = Tables<'posts'> & {
 }
 
 export default function PostDetails({post}: {post: PostWithUser}) {
-  const blurhash = '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
   return (
     <View>
       <View className="p-4">
         <Link href={`/post/${post.id}`} asChild>
           <Pressable className='flex-row'>
-            <Image
-              source={{ uri: post.user.avatar_url }} 
-              className="w-12 aspect-square rounded-full"
+            <SupabaseImage 
+              path={post.user.avatar_url}
+              styles={{width: 48, aspectRatio: 1, borderRadius: 2000}}
             />
 
             <View className="flex-1 ml-3 justify-center">
@@ -46,18 +44,11 @@ export default function PostDetails({post}: {post: PostWithUser}) {
 
       {post.images && post.images.map((image) => (
         <View className='m-3'>
-          <ExpoImage
-            key={image}
-            style={{width: '100%', aspectRatio: 1, borderRadius: 20}}
-            source={{
-              uri: 
-              supabase.storage
-              .from('media')
-              .getPublicUrl(image).data.publicUrl
-          }}
-            placeholder={{ blurhash }}
-            contentFit="cover"
-            transition={1000}
+        <SupabaseImage
+          key={image}
+          path={image}
+          bucket='media'
+          styles={{width: '100%', aspectRatio: 1, borderRadius: 20, borderWidth: 0}}
         />
         </View>
       ))}
